@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/recycler"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+    <com.demo.contact.SideBarView
+        android:id="@+id/sidebar"
+        android:layout_width="100dp"
+        android:layout_height="match_parent"
+        android:layout_gravity="right"
+        app:sbv_circle_color="@android:color/holo_green_dark"
+        app:sbv_circle_radius="10dp"
+        app:sbv_hint_height="35dp"
+        app:sbv_hint_radius="25dp"
+        app:sbv_hint_text_size="20sp"
+        app:sbv_hint_width="70dp"
+        app:sbv_text_bg_color_normal="@android:color/transparent"
+        app:sbv_text_bg_color_press="#66666666"
+        app:sbv_text_color_normal="@android:color/black"
+        app:sbv_text_color_select="@android:color/white"
+        app:sbv_text_height="20dp"
+        app:sbv_text_size_normal="12sp"
+        app:sbv_text_size_pressed="14sp"
+        app:sbv_text_width="30dp" />
+
+</FrameLayout>
