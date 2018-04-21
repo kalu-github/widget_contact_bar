@@ -119,7 +119,7 @@ public class SideBarView extends View {
         final boolean inside = (mTouchY > itemHeightBegin && mTouchY < itemHeightEnd);
 
         // 按压背景变色
-        mPaint.setColor(inside ? mBgColorPress : mBgColorNormal);
+        mPaint.setColor(sidebar && inside ? mBgColorPress : mBgColorNormal);
         canvas.drawRect(getWidth() - mTextWidth, itemHeightBegin, getRight(), itemHeightEnd, mPaint);
 
         // 每一个的中间位置X
