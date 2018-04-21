@@ -50,7 +50,7 @@ public class ContactBar extends View {
     private boolean sidebar = false;
     /****************************************/
 
-    private OnSidebarChangeListener listener;
+    private OnBarChangeListener listener;
 
     /**********************************************************************************************/
 
@@ -160,7 +160,7 @@ public class ContactBar extends View {
             canvas.drawText(str, centenHintX, itemCenterY + 2 * fontTemp, mPaint);
 
             if (null != listener && selecte && inside) {
-                listener.onSidebarChange(mSelectLetter);
+                listener.onBarChange(mSelectLetter);
             }
         }
     }
@@ -209,12 +209,12 @@ public class ContactBar extends View {
         postInvalidate();
     }
 
-    public void setOnSidebarChangeListener(OnSidebarChangeListener mListener) {
+    public void setOnBarChangeListener(OnBarChangeListener mListener) {
         this.listener = mListener;
     }
 
-    public interface OnSidebarChangeListener {
+    public interface OnBarChangeListener {
 
-        void onSidebarChange(String letter);
+        void onBarChange(String letter);
     }
 }

@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-
     <declare-styleable name="ContactBar">
         <attr name="cb_text_color_normal" format="color|reference" />
         <attr name="cb_text_color_select" format="color|reference" />

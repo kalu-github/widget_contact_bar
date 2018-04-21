@@ -34,9 +34,9 @@ public class MainActivity extends AppCompatActivity {
 
 
         final ContactBar bar = findViewById(R.id.sidebar);
-        bar.setOnSidebarChangeListener(new ContactBar.OnSidebarChangeListener() {
+        bar.setOnBarChangeListener(new ContactBar.OnBarChangeListener() {
             @Override
-            public void onSidebarChange(String letter) {
+            public void onBarChange(String letter) {
 
                 int position = 0;
                 for (int i = 0; i < datas.size(); i++) {
