@@ -33,8 +33,8 @@ public class MainActivity extends AppCompatActivity {
         recycler.setAdapter(adapter);
 
 
-        final SideBarView bar = findViewById(R.id.sidebar);
-        bar.setOnSidebarChangeListener(new SideBarView.OnSidebarChangeListener() {
+        final ContactBar bar = findViewById(R.id.sidebar);
+        bar.setOnSidebarChangeListener(new ContactBar.OnSidebarChangeListener() {
             @Override
             public void onSidebarChange(String letter) {
 

@@ -17,7 +17,7 @@ import java.util.List;
  * description: 通讯录搜索栏
  * created by kalu on 2018/4/9 10:15
  */
-public class SideBarView extends View {
+public class ContactBar extends View {
 
     private final List<String> mLetterList = Arrays.asList("A", "B", "C", "D", "E", "F", "G", "H", "I",
             "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V",
@@ -54,33 +54,33 @@ public class SideBarView extends View {
 
     /**********************************************************************************************/
 
-    public SideBarView(Context context) {
+    public ContactBar(Context context) {
         this(context, null);
     }
 
-    public SideBarView(Context context, AttributeSet attrs) {
+    public ContactBar(Context context, AttributeSet attrs) {
         this(context, attrs, 0);
     }
 
-    public SideBarView(Context context, AttributeSet attrs, int defStyle) {
+    public ContactBar(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
 
         if (attrs != null) {
-            TypedArray a = getContext().obtainStyledAttributes(attrs, R.styleable.SideBarView);
+            TypedArray a = getContext().obtainStyledAttributes(attrs, R.styleable.ContactBar);
 
-            mTextColor = a.getColor(R.styleable.SideBarView_sbv_text_color_normal, mTextColor);
-            mTextColorChoose = a.getColor(R.styleable.SideBarView_sbv_text_color_select, mTextColorChoose);
-            mTextSize = a.getDimension(R.styleable.SideBarView_sbv_text_size_normal, mTextSize);
-            mTextWidth = a.getDimension(R.styleable.SideBarView_sbv_text_width, mTextWidth);
-            mItemHeight = a.getDimension(R.styleable.SideBarView_sbv_text_height, mItemHeight);
-            mHintWidth = a.getDimension(R.styleable.SideBarView_sbv_hint_width, mHintWidth);
-            mHintHeight = a.getDimension(R.styleable.SideBarView_sbv_hint_height, mHintHeight);
-            mColorCircle = a.getColor(R.styleable.SideBarView_sbv_circle_color, mColorCircle);
-            mColorRadius = a.getDimension(R.styleable.SideBarView_sbv_circle_radius, mColorRadius);
-            mHintTextSize = a.getDimension(R.styleable.SideBarView_sbv_hint_text_size, mHintTextSize);
-            mHintRadius = a.getDimension(R.styleable.SideBarView_sbv_hint_radius, mHintRadius);
-            mBgColorNormal = a.getColor(R.styleable.SideBarView_sbv_text_bg_color_normal, mBgColorNormal);
-            mBgColorPress = a.getColor(R.styleable.SideBarView_sbv_text_bg_color_press, mBgColorPress);
+            mTextColor = a.getColor(R.styleable.ContactBar_cb_text_color_normal, mTextColor);
+            mTextColorChoose = a.getColor(R.styleable.ContactBar_cb_text_color_select, mTextColorChoose);
+            mTextSize = a.getDimension(R.styleable.ContactBar_cb_text_size_normal, mTextSize);
+            mTextWidth = a.getDimension(R.styleable.ContactBar_cb_text_width, mTextWidth);
+            mItemHeight = a.getDimension(R.styleable.ContactBar_cb_text_height, mItemHeight);
+            mHintWidth = a.getDimension(R.styleable.ContactBar_cb_hint_width, mHintWidth);
+            mHintHeight = a.getDimension(R.styleable.ContactBar_cb_hint_height, mHintHeight);
+            mColorCircle = a.getColor(R.styleable.ContactBar_cb_circle_color, mColorCircle);
+            mColorRadius = a.getDimension(R.styleable.ContactBar_cb_circle_radius, mColorRadius);
+            mHintTextSize = a.getDimension(R.styleable.ContactBar_cb_hint_text_size, mHintTextSize);
+            mHintRadius = a.getDimension(R.styleable.ContactBar_cb_hint_radius, mHintRadius);
+            mBgColorNormal = a.getColor(R.styleable.ContactBar_cb_text_bg_color_normal, mBgColorNormal);
+            mBgColorPress = a.getColor(R.styleable.ContactBar_cb_text_bg_color_press, mBgColorPress);
             a.recycle();
         }
     }
