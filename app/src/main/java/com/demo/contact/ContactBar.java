@@ -9,6 +9,7 @@ import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewConfiguration;
 
 import java.util.Arrays;
 import java.util.List;
@@ -39,15 +40,16 @@ public class ContactBar extends View {
     private float mColorRadius = 25;
     private float mHintWidth = 100;
     private float mHintHeight = 100;
-    private float mTouchY = -1;
+    private float mTouchY = 10;
     private float mTouchX = -1;
 
     private float mHintTextSize = 25;
     private float mHintRadius = 5;
 
-    private int mSelectPosition = 0;
-    private String mSelectLetter = "";
-    private boolean sidebar = false;
+    private int mSelectPosition = -1;
+    private boolean isTouchLetter = false;
+
+    private final int minY = ViewConfiguration.get(getContext()).getScaledTouchSlop();
     /****************************************/
 
     private OnBarChangeListener listener;
@@ -88,6 +90,8 @@ public class ContactBar extends View {
     @Override
     protected void onDraw(Canvas canvas) {
 
+        canvas.save();
+
         // 1.初始化画笔
         mPaint.setAntiAlias(true);
         mPaint.setTextSize(mTextSize);
@@ -115,12 +119,12 @@ public class ContactBar extends View {
             mItemHeight = itemHeight;
         }
 
-        // 是否按压
-        final boolean inside = (mTouchY > itemHeightBegin && mTouchY < itemHeightEnd);
-
         // 按压背景变色
-        mPaint.setColor(sidebar && inside ? mBgColorPress : mBgColorNormal);
-        canvas.drawRect(getWidth() - mTextWidth, itemHeightBegin, getRight(), itemHeightEnd, mPaint);
+        if (mBgColorPress != Color.TRANSPARENT) {
+            final boolean isPress = (isTouchLetter && mTouchY > itemHeightBegin && mTouchY < itemHeightEnd);
+            mPaint.setColor(isPress ? mBgColorPress : mBgColorNormal);
+            canvas.drawRect(getWidth() - mTextWidth, itemHeightBegin, getRight(), itemHeightEnd, mPaint);
+        }
 
         // 每一个的中间位置X
         final float itemCenterX = getWidth() - mTextWidth / 2;
@@ -137,63 +141,78 @@ public class ContactBar extends View {
             final float itemTopY = itemHeight * i + itemHeightBegin;
             final float itemBottomY = itemHeight * (i + 1) + itemHeightBegin;
 
-            final boolean selecte = sidebar && mTouchY > itemTopY && mTouchY < itemBottomY;
+            final boolean selecte = (mTouchY > itemTopY && mTouchY < itemBottomY);
             mSelectPosition = selecte ? i : mSelectPosition;
-            mSelectLetter = mLetterList.get(mSelectPosition);
 
             // 1. 字母背景
-            mPaint.setColor((mSelectPosition == i) || (inside && selecte) ? mColorCircle : Color.TRANSPARENT);
-            canvas.drawCircle(itemCenterX, itemCenterY, mColorRadius, mPaint);
+            boolean ok1 = (selecte || (mSelectPosition == -1 && 0 == i));
+            if (ok1) {
+                mPaint.setColor(mColorCircle);
+                canvas.drawCircle(itemCenterX, itemCenterY, mColorRadius, mPaint);
+            }
             // 2. 字母变色
             mPaint.setTextSize(mTextSize);
-            mPaint.setFakeBoldText((mSelectPosition == i) || selecte);
-            mPaint.setColor((mSelectPosition == i) || selecte ? mTextColorChoose : mTextColor);
+            mPaint.setFakeBoldText(ok1);
+            mPaint.setColor(ok1 ? mTextColorChoose : mTextColor);
             canvas.drawText(str, itemCenterX, itemCenterY + fontTemp, mPaint);
             final float centenHintX = mHintWidth / 2;
-            // 3. 提示背景
-            mPaint.setColor(inside && selecte ? mColorCircle : Color.TRANSPARENT);
-            canvas.drawCircle(centenHintX, itemCenterY, mHintRadius, mPaint);
-            // 4. 提示文字
-            mPaint.setTextSize(mHintTextSize);
-            mPaint.setFakeBoldText(true);
-            mPaint.setColor(inside && selecte ? mTextColorChoose : Color.TRANSPARENT);
-            canvas.drawText(str, centenHintX, itemCenterY + 2 * fontTemp, mPaint);
-
-            if (null != listener && selecte && inside) {
-                listener.onBarChange(mSelectLetter);
+            // 3. 提示背景, 提示文字
+            if (isTouchLetter && selecte) {
+                mPaint.setColor(mColorCircle);
+                canvas.drawCircle(centenHintX, itemCenterY, mHintRadius, mPaint);
+                mPaint.setTextSize(mHintTextSize);
+                mPaint.setFakeBoldText(true);
+                mPaint.setColor(isTouchLetter && selecte ? mTextColorChoose : Color.TRANSPARENT);
+                canvas.drawText(str, centenHintX, itemCenterY + 2 * fontTemp, mPaint);
+            }
+            if (null != listener && selecte && isTouchLetter) {
+                listener.onBarChange(str);
             }
         }
+        canvas.restore();
     }
 
     /**********************************************************************************************/
+
+    private float mDownY;
 
     @Override
     public boolean dispatchTouchEvent(MotionEvent event) {
 
         mTouchX = event.getX();
         mTouchY = event.getY();
-        sidebar = (mTouchX > getWidth() - mTextWidth && mTouchX <= getWidth());
+        isTouchLetter = (mTouchX > getWidth() - mTextWidth && mTouchX <= getWidth());
 
         switch (event.getAction()) {
+            case MotionEvent.ACTION_DOWN:
+                mDownY = event.getY();
+                invalidate();
+                break;
+            case MotionEvent.ACTION_MOVE:
+                if (Math.abs(mTouchY - mDownY) > minY) {
+                    mDownY = mTouchY;
+                    invalidate();
+                }
+                break;
             case MotionEvent.ACTION_UP:
             case MotionEvent.ACTION_CANCEL:
-                mTouchY = -1;
+                isTouchLetter = false;
+                invalidate();
                 break;
         }
-        postInvalidate();
-        return sidebar ? true : super.dispatchTouchEvent(event);
+        return isTouchLetter ? true : super.dispatchTouchEvent(event);
     }
 
     /************************************************/
 
     public void scrollLetter(String positionStr) {
+        if (isTouchLetter) return;
 
         int index = mLetterList.indexOf(positionStr);
-        if (index == mSelectPosition) return;
+        if (index < 0 || index == mSelectPosition) return;
 
         mSelectPosition = index;
-        mSelectLetter = positionStr;
-        postInvalidate();
+        invalidate();
     }
 
     public List<String> getLetter() {
@@ -206,7 +225,7 @@ public class ContactBar extends View {
 
         mLetterList.clear();
         mLetterList.addAll(letters);
-        postInvalidate();
+        invalidate();
     }
 
     public void setOnBarChangeListener(OnBarChangeListener mListener) {
