@@ -141,31 +141,31 @@ public class ContactBar extends View {
             final float itemTopY = itemHeight * i + itemHeightBegin;
             final float itemBottomY = itemHeight * (i + 1) + itemHeightBegin;
 
-            final boolean selecte = (mTouchY > itemTopY && mTouchY < itemBottomY);
+            final boolean selecte = (isTouchLetter && mTouchY > itemTopY && mTouchY < itemBottomY);
             mSelectPosition = selecte ? i : mSelectPosition;
 
             // 1. 字母背景
-            boolean ok1 = (selecte || (mSelectPosition == -1 && 0 == i));
+            boolean ok1 = (selecte || (!isTouchLetter && mSelectPosition == -1 && 0 == i) || (!isTouchLetter && mSelectPosition != -1 && mSelectPosition == i));
             if (ok1) {
                 mPaint.setColor(mColorCircle);
                 canvas.drawCircle(itemCenterX, itemCenterY, mColorRadius, mPaint);
             }
             // 2. 字母变色
             mPaint.setTextSize(mTextSize);
-            mPaint.setFakeBoldText(ok1);
+            mPaint.setFakeBoldText(true);
             mPaint.setColor(ok1 ? mTextColorChoose : mTextColor);
             canvas.drawText(str, itemCenterX, itemCenterY + fontTemp, mPaint);
             final float centenHintX = mHintWidth / 2;
             // 3. 提示背景, 提示文字
-            if (isTouchLetter && selecte) {
+            if (selecte) {
                 mPaint.setColor(mColorCircle);
                 canvas.drawCircle(centenHintX, itemCenterY, mHintRadius, mPaint);
                 mPaint.setTextSize(mHintTextSize);
                 mPaint.setFakeBoldText(true);
-                mPaint.setColor(isTouchLetter && selecte ? mTextColorChoose : Color.TRANSPARENT);
+                mPaint.setColor(selecte ? mTextColorChoose : Color.TRANSPARENT);
                 canvas.drawText(str, centenHintX, itemCenterY + 2 * fontTemp, mPaint);
             }
-            if (null != listener && selecte && isTouchLetter) {
+            if (null != listener && selecte) {
                 listener.onBarChange(str);
             }
         }
@@ -197,6 +197,7 @@ public class ContactBar extends View {
             case MotionEvent.ACTION_UP:
             case MotionEvent.ACTION_CANCEL:
                 isTouchLetter = false;
+                mDownY = event.getY();
                 invalidate();
                 break;
         }
