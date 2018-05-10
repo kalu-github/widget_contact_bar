@@ -20,3 +20,26 @@
     <attr name="cb_hint_radius" format="dimension|reference" />
 </declare-styleable>
 ```
+
+```
+
+int firstVisibleItemPosition = linearLayoutManager.findFirstVisibleItemPosition();
+bar.scrollLetter(datas.get(firstVisibleItemPosition).getIndex());
+
+final ContactBar bar = findViewById(R.id.sidebar);
+        bar.setOnBarChangeListener(new ContactBar.OnBarChangeListener() {
+            @Override
+            public void onBarChange(String letter) {
+
+                int position = 0;
+                for (int i = 0; i < datas.size(); i++) {
+                    if (datas.get(i).getIndex().equals(letter)) {
+                        position = i;
+                        break;
+                    }
+                }
+
+                moveToPosition(linearLayoutManager, position);
+            }
+        });
+```
